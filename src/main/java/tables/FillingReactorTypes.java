@@ -6,13 +6,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.Map;
 
 public class FillingReactorTypes {
     YamlReader yamlReader;
     Connection connection;
-    Map<String, Double> reactorBurnupMap = yamlReader.getReactorBurnupMap();
+    Map<String, Double> reactorBurnupMap;
 
     String insertSQL = "INSERT OR REPLACE INTO ReactorsTypes (type, burnup) VALUES (?, ?)";
 
@@ -20,10 +19,11 @@ public class FillingReactorTypes {
 
     public FillingReactorTypes(String path) {
         yamlReader = new YamlReader(path);
+        reactorBurnupMap = yamlReader.getReactorBurnupMap();
         fillTable();
     }
 
-    public void fillTable(){
+    private  void fillTable(){
         try {
             connection = DriverManager.getConnection("jdbc:sqlite:reactorsDB.db");
             statement = connection.prepareStatement(insertSQL);
@@ -40,24 +40,18 @@ public class FillingReactorTypes {
                 throw new RuntimeException(e);
             }
         }
+        addStatement("LWGR", 25);
+        addStatement("GCR", 22);
+        addStatement("HWDCR", 12);
+        addStatement("HTGR", 100);
+        addStatement("FBR", 150);
+        addStatement("SGHWR", 8);
+    }
+
+    private void addStatement(String stringValue, double doubleValue) {
         try {
-            statement.setString(1, "LWGR");
-            statement.setDouble(2, 25);
-            statement.executeUpdate();
-            statement.setString(1, "GCR");
-            statement.setDouble(2, 22);
-            statement.executeUpdate();
-            statement.setString(1, "HWDCR");
-            statement.setDouble(2, 12);
-            statement.executeUpdate();
-            statement.setString(1, "HTGR");
-            statement.setDouble(2, 100);
-            statement.executeUpdate();
-            statement.setString(1, "FBR");
-            statement.setDouble(2, 150);
-            statement.executeUpdate();
-            statement.setString(1, "SGHWR");
-            statement.setDouble(2, 8);
+            statement.setString(1, stringValue);
+            statement.setDouble(2, doubleValue);
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);

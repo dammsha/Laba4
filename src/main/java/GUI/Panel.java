@@ -1,6 +1,8 @@
 package GUI;
 
 import db.CreatingDB;
+import db.ReadDB;
+import excel.WriteResults;
 import org.example.Parser;
 import reactor.Aggregating;
 import tables.*;
@@ -14,10 +16,9 @@ import java.sql.SQLException;
 
 public class Panel extends JPanel {
     JButton b_parse = new JButton("Парсинг сайта и создание БД");
-    JButton b_result = new JButton("Показать результат");
+    JButton b_results = new JButton("Вывести результаты");
     JButton b_exit = new JButton("Выход");
     GridLayout gr = new GridLayout(3, 1);
-    JScrollPane scrollPane;
 
     Parser parser;
     CreatingDB db = new CreatingDB();
@@ -29,15 +30,14 @@ public class Panel extends JPanel {
     FillingLoadFactor fillingLoadFactor;
     FillingConsumption fillingConsumption;
     Aggregating aggregating;
-
+    ReadDB readDB;
     Jfilechooser jfilechooser;
-    String fileName;
     String path;
 
     public Panel() {
         setLayout(gr);
         add(b_parse);
-        add(b_result);
+        add(b_results);
         add(b_exit);
 
         b_parse.addActionListener(new ActionListener() {
@@ -49,7 +49,7 @@ public class Panel extends JPanel {
                     throw new RuntimeException(ex);
                 }
                 path = jfilechooser.openFile();
-                
+                JOptionPane.showMessageDialog(null, "Запуск парсера");
                 parser = new Parser();
                 JOptionPane.showMessageDialog(null, "Парсинг сайта завершен");
                 db.connect();
@@ -74,6 +74,21 @@ public class Panel extends JPanel {
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
+            }
+        });
+
+        b_results.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    jfilechooser = new Jfilechooser();
+                } catch (URISyntaxException ex) {
+                    throw new RuntimeException(ex);
+                }
+                readDB = new ReadDB(jfilechooser.openDB());
+                new WriteResults(readDB);
+                JOptionPane.showMessageDialog(null, "Данные записаны в эксель");
+                System.out.println("Данные записаны в эксель");
             }
         });
 

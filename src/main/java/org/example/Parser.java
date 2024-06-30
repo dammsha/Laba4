@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Parser {
+
     Document doc;
     String id;
     String url;
@@ -51,6 +52,7 @@ public class Parser {
                 country = element.text();
                 String[] href = element.attr("href").split("");
                 countries.put(country, href[href.length - 2] + href[href.length - 1]);
+                countries.put("Taiwan", "TW");
                 System.out.println(counter + " " +country + " " + href[href.length-2]+href[href.length-1]);
             }
             else {break;}

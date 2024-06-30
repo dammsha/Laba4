@@ -3,6 +3,7 @@ package reactor;
 import java.sql.*;
 
 public class Aggregating {
+
     Connection connection;
     String aggrCountry = "SELECT B.country, A.year, SUM(A.consumption) FROM Consumption AS A INNER JOIN ReactorsFromPRIS AS B ON A.reactor = B.name GROUP BY B.country, A.year";
     String aggrCompany = "SELECT B.operator, A.year, SUM(A.consumption) FROM Consumption AS A INNER JOIN ReactorsFromPRIS AS B ON A.reactor = B.name GROUP BY B.operator, A.year";
@@ -11,60 +12,36 @@ public class Aggregating {
     String insertSQLCompany = "INSERT OR REPLACE INTO ConsumptionCompany (company, year, consumption) VALUES (?, ?, ?)";
     String insertSQLRegion = "INSERT OR REPLACE INTO ConsumptionRegion (region, year, consumption) VALUES (?, ?, ?)";
 
-    PreparedStatement statementAggrCountry;
-    PreparedStatement statementInsertCountry;
-    PreparedStatement statementAggrCompany;
-    PreparedStatement statementInsertCompany;
-    PreparedStatement statementAggrRegion;
-    PreparedStatement statementInsertRegion;
+    PreparedStatement preparedStatementSelect;
+    PreparedStatement preparedStatementInsert;
 
-    ResultSet resultSetCountry;
-    ResultSet resultSetCompany;
-    ResultSet resultSetRegion;
+    ResultSet resultSet;
 
     public Aggregating() throws SQLException {
+        fillTable(aggrCountry, insertSQLCountry);
+        fillTable(aggrCompany, insertSQLCompany);
+        fillTable(aggrRegion, insertSQLRegion);
+    }
 
+    public void fillTable(String select, String insert) {
         try {
             connection = DriverManager.getConnection("jdbc:sqlite:reactorsDB.db");
-            statementAggrCountry = connection.prepareStatement(aggrCountry);
-            statementInsertCountry = connection.prepareStatement(insertSQLCountry);
-            statementAggrCompany = connection.prepareStatement(aggrCompany);
-            statementInsertCompany = connection.prepareStatement(insertSQLCompany);
-            statementAggrRegion = connection.prepareStatement(aggrRegion);
-            statementInsertRegion = connection.prepareStatement(insertSQLRegion);
-            resultSetCountry = statementAggrCountry.executeQuery();
-            resultSetCompany = statementAggrCompany.executeQuery();
-            resultSetRegion = statementAggrRegion.executeQuery();
+            preparedStatementSelect = connection.prepareStatement(select);
+            preparedStatementInsert = connection.prepareStatement(insert);
+            resultSet = preparedStatementSelect.executeQuery();
 
-            while (resultSetCountry.next()) {
-                statementInsertCountry.setString(1, resultSetCountry.getString(1));
-                statementInsertCountry.setString(2, resultSetCountry.getString(2));
-                statementInsertCountry.setDouble(3, resultSetCountry.getDouble(3));
-                statementInsertCountry.executeUpdate();
-                System.out.println("Запись добавлена");
+            while (resultSet.next()) {
+                preparedStatementInsert.setString(1, resultSet.getString(1));
+                preparedStatementInsert.setString(2, resultSet.getString(2));
+                preparedStatementInsert.setDouble(3, resultSet.getDouble(3));
+                preparedStatementInsert.executeUpdate();
+                System.out.println("Запись агрегации добавлена ");
             }
-            while (resultSetCompany.next()) {
-                statementInsertCompany.setString(1, resultSetCompany.getString(1));
-                statementInsertCompany.setString(2, resultSetCompany.getString(2));
-                statementInsertCompany.setDouble(3, resultSetCompany.getDouble(3));
-                statementInsertCompany.executeUpdate();
-                System.out.println("Запись добавлена 1");
-            }
-            while (resultSetRegion.next()) {
-                statementInsertRegion.setString(1, resultSetRegion.getString(1));
-                statementInsertRegion.setString(2, resultSetRegion.getString(2));
-                statementInsertRegion.setDouble(3, resultSetRegion.getDouble(3));
-                statementInsertRegion.executeUpdate();
-                System.out.println("Запись добавлена 2");
-            }
-
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
             try {
-                if (statementAggrCountry != null) statementAggrCountry.close();
-                if (statementAggrCompany != null) statementAggrCompany.close();
-                if (statementAggrRegion != null) statementAggrRegion.close();
+                if (preparedStatementSelect != null) preparedStatementSelect.close();
                 if (connection != null) connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();

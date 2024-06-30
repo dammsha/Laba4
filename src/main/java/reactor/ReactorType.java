@@ -1,6 +1,7 @@
 package reactor;
 
 public class ReactorType {
+
     private String reactorClass;
     private double burnup;
 

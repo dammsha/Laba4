@@ -20,7 +20,7 @@ public class FillingCountries {
         fillTable();
     }
 
-    public void fillTable() {
+    private void fillTable() {
         try {
             connection = DriverManager.getConnection("jdbc:sqlite:reactorsDB.db");
             statement = connection.prepareStatement(insertSQL);

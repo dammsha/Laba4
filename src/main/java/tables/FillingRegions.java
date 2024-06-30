@@ -7,9 +7,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Map;
 
 public class FillingRegions {
+
     Regions regions = new Regions();
     ArrayList<String> regionsList = regions.getRegions();
     Connection connection;
@@ -20,7 +20,7 @@ public class FillingRegions {
         fillTable();
     }
 
-    public void fillTable() {
+    private  void fillTable() {
         try {
             connection = DriverManager.getConnection("jdbc:sqlite:reactorsDB.db");
             statement = connection.prepareStatement(insertSQL);

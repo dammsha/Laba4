@@ -5,15 +5,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Regions {
-    ArrayList<String> regions = new ArrayList<>();
-    Map<String, String> countries = new HashMap<>();
+    private ArrayList<String> regions = new ArrayList<>();
+    private Map<String, String> countries = new HashMap<>();
 
     public Regions() {
         this.regions = fillRegions();
         this.countries = fillCountries();
     }
 
-    public ArrayList<String> fillRegions() {
+    private ArrayList<String> fillRegions() {
         regions.add("Western Europe"); // западная
         regions.add("North Africa and the Middle East");
         regions.add("Central and Eastern Europe");
@@ -29,7 +29,7 @@ public class Regions {
         return regions;
     }
 
-    public Map<String, String> fillCountries() {
+    private Map<String, String> fillCountries() {
         countries.put("Argentina", "Latin America");
         countries.put("Armenia", "North Africa and the Middle East");
         countries.put("Bangladesh", "South Asia");
@@ -68,6 +68,7 @@ public class Regions {
         countries.put("United Arab Emirates", "North Africa and the Middle East");
         countries.put("United Kingdom", "Western Europe");
         countries.put("United States of America", "North America");
+        countries.put("Taiwan", "Southeast Asia");
         return countries;
     }
 

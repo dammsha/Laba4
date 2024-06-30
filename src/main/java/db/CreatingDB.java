@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class CreatingDB {
+
     public Connection connect() {
         String url = "jdbc:sqlite:reactorsDB.db";
         Connection conn = null;

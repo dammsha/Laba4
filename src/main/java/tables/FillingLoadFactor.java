@@ -12,9 +12,6 @@ public class FillingLoadFactor {
     Connection connection;
     String insertSQL = "INSERT OR REPLACE INTO LoadFactor(reactor, year, loadfactor)" + "VALUES(?, ?, ?)";
     PreparedStatement statement;
-
-    String name;
-    HashMap<Integer, Double> loadMap;
     HashMap<String, HashMap<Integer, Double>> mapForLoadMap;
 
     public FillingLoadFactor(HashMap<String, HashMap<Integer, Double>> mapForLoadMap) {
@@ -39,6 +36,7 @@ public class FillingLoadFactor {
                     statement.setInt(2, year);
                     statement.setDouble(3, value);
                     statement.executeUpdate();
+                    System.out.println("Запись добавлена в таблицу Load Factor");
                 }
             }
         } catch (SQLException e) {

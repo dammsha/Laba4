@@ -9,6 +9,7 @@ import java.util.Map;
 
 public class YamlReader {
 
+
     ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
     ReactorHolder holder;
     Map<String, Double> reactorBurnupMap = new HashMap<>();
@@ -37,4 +38,3 @@ public class YamlReader {
         return reactorBurnupMap;
     }
 }
-

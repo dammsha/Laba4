@@ -6,7 +6,8 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 
 public class ReactorHolder {
-    private Map<String, ReactorType> reactors = new HashMap<>();
+
+    Map<String, ReactorType> reactors = new HashMap<>();
 
     @JsonAnySetter
     public void setReactor(String name, Map<String, Object> properties) {

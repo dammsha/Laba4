@@ -6,7 +6,9 @@ import java.awt.*;
 public class Window extends JFrame {
 
     JPanel panel = new Panel();
+
     public Window(){
+
         setTitle("Окно");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setVisible(true);
@@ -14,6 +16,6 @@ public class Window extends JFrame {
         setLocationRelativeTo(null);
         setSize(new Dimension(500,500));
         setLocationRelativeTo(null);
-        add(panel);
+        getContentPane().add(panel);
     }
 }
